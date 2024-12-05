@@ -1,23 +1,37 @@
-import globals from "globals";
-import js from "@eslint/js";
-import { configs as tsConfigs } from "@typescript-eslint/eslint-plugin";
-import { configs as reactConfigs } from "eslint-plugin-react";
+import eslintPlugin from "@typescript-eslint/eslint-plugin";
+import eslintParser from "@typescript-eslint/parser";
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
-  {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: "module",
-      globals: globals.browser,
-      parser: "@typescript-eslint/parser",
+    {
+        files: ["**/*.{ts,tsx}"],
+        languageOptions: {
+            parser: eslintParser,
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+                ecmaVersion: "latest",
+                sourceType: "module",
+                project: "./tsconfig.eslint.json",
+            },
+        },
+        plugins: {
+            "@typescript-eslint": eslintPlugin,
+        },
+        rules: {
+            "@typescript-eslint/no-unused-vars": [
+                "error",
+                {
+                    vars: "all",
+                    args: "after-used",
+                    ignoreRestSiblings: true,
+                },
+            ],
+            "@typescript-eslint/strict-boolean-expressions": "error",
+            "@typescript-eslint/no-floating-promises": "error",
+            "@typescript-eslint/explicit-module-boundary-types": "warn",
+            "no-console": "warn",
+            eqeqeq: ["error", "always"],
+        },
     },
-    rules: {
-      "react/react-in-jsx-scope": "off",
-    },
-  },
-  js.configs.recommended,
-  tsConfigs.recommended,
-  reactConfigs.recommended,
 ];
